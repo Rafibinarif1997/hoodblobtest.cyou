@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HOODBLOB — NFT Staking</title>
+<style>
+:root{--bg:#07080b;--card:rgba(17,19,25,.72);--line:#282b34;--text:#f7f7f8;--muted:#9296a3;--white:#fff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(800px 420px at 50% -5%,#2a2b31 0%,#101116 38%,#07080b 75%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:70px 70px;mask-image:linear-gradient(to bottom,#000,transparent 80%)}
+.wrap{max-width:1120px;margin:auto;padding:22px 20px 70px}.nav{height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5;background:rgba(7,8,11,.65);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.05)}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:2px}.mark{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#fff,#777);color:#08090c;font-weight:950;box-shadow:0 8px 30px rgba(255,255,255,.1)}
+.navlinks{display:flex;gap:25px;color:#aeb1bb;font-size:13px}.navlinks a{color:inherit;text-decoration:none}.connect{border:1px solid #41444e;background:#f5f5f5;color:#08090b;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer}
+.hero{text-align:center;padding:92px 0 52px}.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:8px 12px;border-radius:999px;color:#b7bac3;font-size:12px;background:rgba(255,255,255,.025)}.dot{width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff}
+.hero h1{font-size:clamp(48px,8vw,86px);line-height:.95;letter-spacing:-5px;margin:22px 0 18px}.hero h1 span{color:#999}.hero p{max-width:640px;margin:auto;color:var(--muted);line-height:1.7}.hero-actions{margin-top:28px;display:flex;justify-content:center;gap:10px}.primary,.secondary{padding:13px 19px;border-radius:12px;font-weight:800;cursor:pointer}.primary{background:#fff;color:#08090b;border:1px solid #fff}.secondary{background:#12141a;color:#fff;border:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 18px 55px rgba(0,0,0,.2);backdrop-filter:blur(16px)}.stat{padding:20px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:24px;margin-top:9px}
+.panel{padding:24px;margin-top:14px}.panelhead{display:flex;justify-content:space-between;gap:15px;align-items:center}.panel h2{font-size:20px;margin:0 0 5px}.muted{color:var(--muted)}.row{display:flex;justify-content:space-between;align-items:center;gap:15px;border-top:1px solid var(--line);padding:17px 0}.row:first-of-type{margin-top:12px}.actions{display:flex;gap:10px;flex-wrap:wrap}.notice{margin-top:14px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:#14161c;color:#969aa6;font-size:13px;line-height:1.5}
+footer{text-align:center;color:#5f626c;font-size:12px;margin-top:38px}
+@media(max-width:760px){.navlinks{display:none}.grid{grid-template-columns:1fr 1fr}.hero{padding:70px 0 40px}.hero h1{letter-spacing:-3px}.row{align-items:flex-start;flex-direction:column}}
+@media(max-width:430px){.grid{grid-template-columns:1fr}.connect{padding:10px 12px}.hero-actions{flex-direction:column}}
+
+.wallet-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.wallet-modal.show{display:flex}.wallet-box{width:min(430px,100%);background:#111319;border:1px solid #30333d;border-radius:24px;padding:24px;box-shadow:0 30px 100px rgba(0,0,0,.6)}.wallet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.wallet-head h3{margin:0;font-size:21px}.close{background:#191b21;border:1px solid #2b2e37;color:#aaa;width:34px;height:34px;border-radius:10px;cursor:pointer;font-size:18px}.wallet-option{width:100%;display:flex;align-items:center;gap:13px;background:#171920;border:1px solid #292c35;color:#fff;padding:15px;border-radius:14px;margin-top:10px;cursor:pointer;text-align:left}.wallet-option:hover{border-color:#5a5e6a;background:#1b1d24}.wallet-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:#242731;font-weight:900}.wallet-option strong{display:block}.wallet-option small{display:block;color:#858995;margin-top:2px}.wallet-status{font-size:12px;color:#888d99;margin-top:15px;text-align:center;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="nav">
+<div class="brand"><div class="mark">H</div><span>HOODBLOB</span></div>
+<div class="navlinks"><a href="#staking">Staking</a><a href="#rewards">Rewards</a><a href="#about">About</a></div>
+<button class="connect" id="connect">Connect Wallet</button>
+</nav>
+
+<section class="hero" id="about">
+<div class="eyebrow"><i class="dot"></i> Robinhood Chain Testnet • Live Preview</div>
+<h1>STAKE YOUR <span>NFTs.</span></h1>
+<p>Put your HOODBLOB NFTs to work. Earn ETH rewards through a clean, transparent staking experience built for the next generation of holders.</p>
+<div class="hero-actions"><button class="primary" onclick="document.getElementById('staking').scrollIntoView()">Start Staking →</button><button class="secondary" onclick="document.getElementById('rewards').scrollIntoView()">View Rewards</button></div>
+<div id="wallet" class="muted" style="margin-top:14px;font-size:13px"></div>
+</section>
+
+<div class="grid" id="rewards">
+<div class="card stat"><small>Reward / NFT / day</small><strong>0.00001 ETH</strong></div>
+<div class="card stat"><small>Minimum lock</small><strong>7 Days</strong></div>
+<div class="card stat"><small>Unstake fee</small><strong>0.001 ETH</strong></div>
+<div class="card stat"><small>Reward pool</small><strong>0.02 ETH</strong></div>
+</div>
+
+<section class="card panel" id="staking">
+<div class="panelhead"><div><h2>Your NFTs</h2><span class="muted">Select a testnet NFT to stake</span></div><button class="secondary" disabled>Refresh</button></div>
+<div class="row"><div><strong>NFT Collection</strong><br><span class="muted">Contract not configured yet</span></div><span class="muted">0 NFTs</span></div>
+</section>
+
+<section class="card panel">
+<h2>Staking Actions</h2><p class="muted">Contract actions will activate after the verified test NFT and staking contract are connected.</p>
+<div class="actions"><button class="secondary" disabled>Approve NFT</button><button class="primary" disabled>Stake NFT</button></div>
+<div class="notice">Testnet mode: no NFT transfer or approval can happen from this preview until the smart contracts are configured.</div>
+</section>
+
+<section class="card panel">
+<h2>Your Position</h2>
+<div class="row"><div><strong>Staked NFTs</strong><br><span class="muted">0</span></div><div><strong>Pending ETH</strong><br><span class="muted">0 ETH</span></div></div>
+<div class="actions"><button class="primary" disabled>Claim Rewards</button><button class="secondary" disabled>Unstake</button></div>
+</section>
+
+<footer>HOODBLOB • Robinhood Chain Testnet • Testnet assets have no monetary value</footer>
+</div>
+
+<div class="wallet-modal" id="walletModal">
+  <div class="wallet-box">
+    <div class="wallet-head">
+      <h3>Connect your wallet</h3>
+      <button class="close" id="closeWallet">×</button>
+    </div>
+    <div class="muted" style="font-size:13px;margin-bottom:8px">Choose a wallet to continue on Robinhood Chain Testnet.</div>
+    <button class="wallet-option" data-wallet="injected"><span class="wallet-icon">🦊</span><span><strong>MetaMask / Browser Wallet</strong><small>Use an installed EVM wallet</small></span></button>
+    <button class="wallet-option" data-wallet="mobile"><span class="wallet-icon">📱</span><span><strong>Mobile Wallet</strong><small>Open your wallet app to connect</small></span></button>
+    <button class="wallet-option" data-wallet="walletconnect"><span class="wallet-icon">🔗</span><span><strong>WalletConnect</strong><small>Connect with a compatible wallet</small></span></button>
+    <div class="wallet-status" id="walletStatus">Network: Robinhood Chain Testnet • Chain ID 46630</div>
+  </div>
+</div>
+<script>
+const network={chainId:"0xa2d6",chainName:"Robinhood Chain Testnet",rpcUrls:["https://rpc.testnet.chain.robinhood.com"],nativeCurrency:{name:"Ether",symbol:"ETH",decimals:18},blockExplorerUrls:["https://explorer.testnet.chain.robinhood.com"]};
+const modal=document.getElementById("walletModal"),status=document.getElementById("walletStatus"),connect=document.getElementById("connect");
+function openModal(){modal.classList.add("show");status.textContent="Network: Robinhood Chain Testnet • Chain ID 46630"}
+function closeModal(){modal.classList.remove("show")}
+connect.onclick=openModal;
+document.getElementById("closeWallet").onclick=closeModal;
+modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});
+
+async function connectInjected(){
+ if(!window.ethereum){
+   status.textContent="No browser wallet detected. On Android, open this page inside MetaMask or another compatible wallet browser.";
+   return;
+ }
+ try{
+   status.textContent="Connecting… approve the request in your wallet.";
+   let id=await ethereum.request({method:"eth_chainId"});
+   if(id!==network.chainId){
+     try{await ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:network.chainId}]})}
+     catch(e){if(e.code===4902)await ethereum.request({method:"wallet_addEthereumChain",params:[network]});else throw e}
+   }
+   const accounts=await ethereum.request({method:"eth_requestAccounts"});
+   if(!accounts.length)throw new Error("No wallet account selected.");
+   const short=accounts[0].slice(0,6)+"…"+accounts[0].slice(-4);
+   connect.textContent=short;
+   document.getElementById("wallet").textContent="Wallet connected • "+short+" • Robinhood Testnet";
+   status.textContent="Connected successfully.";
+   setTimeout(closeModal,500);
+ }catch(e){status.textContent=e.message||"Wallet connection was cancelled."}
+}
+
+document.querySelectorAll(".wallet-option").forEach(btn=>{
+ btn.onclick=()=>{
+   const type=btn.dataset.wallet;
+   if(type==="injected"||type==="mobile") connectInjected();
+   else status.textContent="WalletConnect requires a WalletConnect project ID. We will add it before production launch.";
+ };
+});
+
+if(window.ethereum){
+ ethereum.on?.("accountsChanged",a=>{
+   if(a?.length){const s=a[0].slice(0,6)+"…"+a[0].slice(-4);connect.textContent=s;document.getElementById("wallet").textContent="Wallet connected • "+s+" • Robinhood Testnet"}
+ });
+ ethereum.on?.("chainChanged",()=>location.reload());
+}
+</script>
+</body>
+</html>
